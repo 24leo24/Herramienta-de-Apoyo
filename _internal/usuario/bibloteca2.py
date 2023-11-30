@@ -10,6 +10,7 @@ from tkinter import filedialog
 from tkinter import Scrollbar
 from usuario.ventana_modal import VentanaModal
 from usuario.ventana_modal import VentanaModal2
+from usuario.ventana_modal import VentanaModal3
 #import io
 from usuario.conexion_sqlite import Comunicacion
 
@@ -38,6 +39,7 @@ class Frame5(tk.Frame):
         self.tabla.column("Nombre", width=230)
         self.tabla.column("Asignatura", width=230)
         self.tabla.column("Recomendación", width=300)
+        
 
         self.tabla.heading("ID", text="ID")
         self.tabla.heading("Nombre", text="Nombre")
@@ -59,21 +61,27 @@ class Frame5(tk.Frame):
         self.tabla.bind("<ButtonRelease-1>", self.seleccionar_fila)
 
         #BOTONES DE LA VISTA
+
+        self.boton_ver = tk.Button(self, text="Ver Contenido", command=self.ver_contenido)
+        self.boton_ver.config(width=12, font=('Arial', 12, 'bold'),
+        fg='#DAD5D6', bg='#33B5FF', cursor='hand2', activebackground='#33E3FF')
+        self.boton_ver.grid(row=2, column=2, padx=0, pady=15)
+
         self.boton_exportar = tk.Button(self, text="Exportar", command=self.exportar_archivo)
         self.boton_exportar.config(width=12, font=('Arial', 12, 'bold'),
         fg = '#DAD5D6', bg='#229805', cursor='hand2', activebackground='#34CD0E')
-        self.boton_exportar.grid(row=2, column=2, padx=0, pady=0)
+        self.boton_exportar.grid(row=3, column=2, padx=0, pady=15)
 
         self.boton_borrar = tk.Button(self, text="Borrar", command=self.borrar_fila)
         self.boton_borrar.config(width=12, font=('Arial', 12, 'bold'),
         fg = '#DAD5D6', bg='#3371FF', cursor='hand2', activebackground='#33ACFF')
-        self.boton_borrar.grid(row=3, column=2, padx=0, pady=50)
+        self.boton_borrar.grid(row=4, column=2, padx=0, pady=15)
 
         self.boton_nuevo = tk.Button(self, text="VOLVER")
         self.boton_nuevo.config(width=12, font=('Arial', 12, 'bold'),
         fg = '#DAD5D6', bg='#FF3333', cursor='hand2',
         activebackground='#FF6B33', command=self.mostrar_vista1)
-        self.boton_nuevo.grid(row=4, column=2, padx=0, pady= 10)
+        self.boton_nuevo.grid(row=5, column=2, padx=0, pady= 15)
 
 
     #def borrar_fila2(self):
@@ -120,6 +128,15 @@ class Frame5(tk.Frame):
         selected_item = self.tabla.selection()
         if selected_item:
             self.seleccion_actual = selected_item[0]
+
+    def ver_contenido(self):
+        if self.seleccion_actual:
+            fila_seleccionada = self.tabla.item(self.seleccion_actual)['values']
+            contenido = fila_seleccionada[4]  # Índice correspondiente al contenido
+            ventana_contenido = VentanaModal3(self, "Contenido", contenido)
+            self.wait_window(ventana_contenido)
+        else:
+            VentanaModal(self, "FILA NO SELECCIONADA", "Por favor, seleccione una fila.")
 
     def exportar_archivo(self):
         selected_item = self.tabla.selection()
